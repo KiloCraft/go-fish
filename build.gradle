@@ -2,6 +2,7 @@ plugins {
     id 'fabric-loom' version '1.10.+'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -44,6 +45,20 @@ dependencies {
     modImplementation "eu.pb4:polymer-core:${project.polymer_version}"
     modImplementation "eu.pb4:polymer-virtual-entity:${project.polymer_version}"
     modImplementation "eu.pb4:polymer-autohost:${project.polymer_version}"
+}
+
+publishMods {
+    file = remapJar.archiveFile
+    type = STABLE
+    changelog = providers.environmentVariable("CHANGELOG").getOrElse("No changelog provided")
+
+    displayName = "go-fish ${version.get()}"
+
+    github {
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        repository = providers.environmentVariable("GITHUB_REPOSITORY").getOrElse("KiloCraft/go-fish")
+        commitish = providers.environmentVariable("GITHUB_REF_NAME").getOrElse("kilo")
+    }
 }
 
 processResources {
